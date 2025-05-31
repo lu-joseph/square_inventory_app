@@ -1,8 +1,22 @@
 "use client";
 import React, { useEffect, useState } from 'react';
 
+type Variation = {
+  name: string;
+  sku: string;
+  variationId: string;
+  stock: number;
+};
+
+type InventoryItem = {
+  itemId: string;
+  name: string;
+  variations: Variation[];
+  categories: string[];
+};
+
 export default function Home() {
-  const [items, setItems] = useState([]);
+  const [items, setItems] = useState<InventoryItem[]>([]);
 
   const [error, setError] = useState('');
 
