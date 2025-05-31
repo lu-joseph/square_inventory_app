@@ -23,7 +23,7 @@ export default function Home() {
   useEffect(() => {
     const getItems = async () => {
       try {
-        const res = await fetch('http://localhost:4000/api/catalog/list', {
+        const res = await fetch('/api/catalog/list', {
           method: 'GET',
           headers: { 'Content-Type': 'application/json' },
         });
