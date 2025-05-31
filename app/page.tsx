@@ -29,7 +29,6 @@ export default function Home() {
         });
         const response = await res.json();
         setItems(response);
-        console.log('setting response to ', response);
       } catch (err) {
         console.log(err);
         setError('Failed to get items');
