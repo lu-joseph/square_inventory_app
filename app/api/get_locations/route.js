@@ -15,14 +15,12 @@ export async function GET(request) {
             environment: process.env.NEXT_PUBLIC_SQUARE_BASE_URL,
             token: token,
         });
-        const { data } = await client.catalog.list({
-            types: 'CATEGORY',
-        });
-        return NextResponse.json(data.map((item) => ({ id: item.id, name: item.categoryData.name })))
+        const response = await client.locations.list();
+        return NextResponse.json(response.locations.map((location) => ({ id: location.id, name: location.name })))
 
     } catch (err) {
         console.error(err);
-        return NextResponse.json({ error: 'Failed to get category names' }, { status: 500 });
+        return NextResponse.json({ error: 'Failed to get locations' }, { status: 500 });
     }
 
 }
