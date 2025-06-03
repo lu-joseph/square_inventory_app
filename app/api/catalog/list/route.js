@@ -1,37 +1,6 @@
 import { NextResponse } from 'next/server';
-
-// server.js
 import { SquareClient, SquareEnvironment } from 'square';
 
-const athome_stock = new Map([
-    // white angel shirt
-    ["70", 7], // M
-    ["71", 7], // L
-    // idol shirt
-    // white
-    ["72", 4], // M
-    ["74", 5], // M
-
-    // star girls shirt
-    // black (grey)
-    ["76", 7],
-    ["77", 7],
-
-    //totes
-    ["19", 8], // dig nos
-    ["26", 4], // goodnight kiss
-    ["35", 4], // meiberry lounge
-    ["38", 7], // mona and pals
-    ["63", 5], // rockstar
-    ["54", 4], // roommates
-    ["69", 5], // u died
-
-    // mini totes
-    ["45", 8], // moon
-    ["31", 6], // life is good
-    ["15", 7], // dancing tote
-
-]);
 
 
 const client = new SquareClient({
@@ -67,7 +36,7 @@ export async function GET() {
                         name: variation.itemVariationData.name,
                         sku: variation.itemVariationData.sku,
                         variationId: variation.id,
-                        stock: (inventoryMap.get(variation.id) || 0) - (athome_stock.get(variation.itemVariationData.sku) || 0)
+                        stock: (inventoryMap.get(variation.id) || 0)
                     }
                 )),
                 categories: item.itemData.categories.map((category) => (categories.get(category.id)))
