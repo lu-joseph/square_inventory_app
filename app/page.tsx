@@ -232,7 +232,7 @@ export default function Home() {
           items.length > 0
             ? <div>
               <h2>Inventory</h2>
-              <input type="text" className='form-control' placeholder="Enter item name..." onChange={(e) => setItemQuery(e.target.value)}></input>
+              <input type="text" className='form-control' placeholder="Enter item name..." value={itemQuery} onChange={(e) => setItemQuery(e.target.value)}></input>
               <select className="form-select" aria-label="Select reporting category" onChange={(e) => setSelectedCategory(e.target.value)}>
                 <option value="">Filter by reporting category</option>
                 {categoryNames?.map((category) => (
@@ -256,7 +256,7 @@ export default function Home() {
                     <p>Categories: {item.categories?.join(", ")}</p>
                     {item.variations?.map((variation) => (
                       <div key={variation.variationId}>
-                        <VariationInfo variation={variation} locationId={currentLocation} setItems={setItems} setError={setError} />
+                        <VariationInfo variation={variation} locationId={currentLocation} setItems={setItems} setError={setError} setItemQuery={setItemQuery} />
                       </div>
                     ))}
                   </div>

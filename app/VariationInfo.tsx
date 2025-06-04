@@ -6,7 +6,8 @@ export default function VariationInfo(props: {
     variation: Variation,
     locationId: string,
     setItems: (value: React.SetStateAction<InventoryItem[]>) => void,
-    setError: (value: React.SetStateAction<string>) => void
+    setError: (value: React.SetStateAction<string>) => void,
+    setItemQuery: (value: React.SetStateAction<string>) => void,
 }) {
 
     const inputRef = useRef<HTMLInputElement>(null);
@@ -39,6 +40,7 @@ export default function VariationInfo(props: {
             }
             inputRef.current.value = "";
             props.setItems([]);
+            props.setItemQuery("");
 
             GetInventory({ currentLocation: props.locationId, setItems: props.setItems, setError: props.setError })
         }
