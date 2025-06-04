@@ -1,10 +1,8 @@
 "use client";
 import React, { useEffect, useState } from 'react';
 import crypto from 'crypto';
-import CatalogObjectCard from './CatalogObjectCard';
 import VariationInfo from './VariationInfo';
 import GetInventory from './GetInventory';
-// import process from 'process';
 
 export type Variation = {
   name: string;
