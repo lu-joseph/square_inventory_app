@@ -3,6 +3,7 @@ import React, { useEffect, useState } from 'react';
 import crypto from 'crypto';
 import VariationInfo from './VariationInfo';
 import GetInventory from './GetInventory';
+import CategoryDropdown from './CategoryDropdown';
 
 export type Variation = {
   name: string;
@@ -18,7 +19,7 @@ export type InventoryItem = {
   categories?: string[];
 };
 
-type Category = {
+export type Category = {
   id: string;
   name: string;
 }
@@ -26,6 +27,7 @@ type Category = {
 enum Page {
   Inventory = 0,
   Order,
+  Price,
 }
 
 type Location = {
@@ -99,7 +101,7 @@ export default function Home() {
   }, [isAuthenticated, currentLocation])
 
   useEffect(() => {
-    if (isAuthenticated) {
+    if (isAuthenticated && (page === Page.Inventory || page === Page.Price)) {
       const getCategoryNames = async () => {
         try {
           const res = await fetch(`/api/category_names?token=${localStorage.getItem('square_access_token')}`, {
@@ -116,7 +118,7 @@ export default function Home() {
       getCategoryNames();
 
     }
-  }, [isAuthenticated])
+  }, [isAuthenticated, page])
 
   const generateAuthUrl = () => {
     const {
@@ -126,7 +128,6 @@ export default function Home() {
       appId,
     } = getAuthUrlValues();
 
-    // Store for later
     localStorage.setItem('square_code_verifier', squareCodeVerifier);
     const scopes = ["INVENTORY_READ", "INVENTORY_WRITE", "ITEMS_READ", "MERCHANT_PROFILE_READ"];
 
@@ -203,6 +204,10 @@ export default function Home() {
     return (<div>Authenticated; Locations loading...</div>)
   }
 
+  if (error) {
+    return (<div>Error: {error}</div>)
+  }
+
   return (
     <div style={{ padding: "1rem" }}>
       <div className="btn-group" role="group" aria-label="Basic radio toggle button group">
@@ -217,6 +222,11 @@ export default function Home() {
           onChange={() => { setPage(Page.Order) }}
         ></input>
         <label className="btn btn-outline-primary" htmlFor="btnradio2">Cash order</label>
+        <input type="radio" className="btn-check" name="btnradio" id="btnradio3" value="Price"
+          checked={page === Page.Price}
+          onChange={() => { setPage(Page.Price) }}
+        ></input>
+        <label className="btn btn-outline-primary" htmlFor="btnradio3">Change category price</label>
       </div>
       <select className="form-select" aria-label="Select location" onChange={(e) => setCurrentLocation(e.target.value)}>
         <option value="">Select location</option>
@@ -231,13 +241,7 @@ export default function Home() {
             ? <div>
               <h2>Inventory</h2>
               <input type="text" className='form-control' placeholder="Enter item name..." value={itemQuery} onChange={(e) => setItemQuery(e.target.value)}></input>
-              <select className="form-select" aria-label="Select reporting category" onChange={(e) => setSelectedCategory(e.target.value)}>
-                <option value="">Filter by reporting category</option>
-                {categoryNames?.map((category) => (
-                  <option key={category.id} value={category.name}>{category.name}</option>
-                ))}
-              </select>
-
+              <CategoryDropdown setSelectedCategory={setSelectedCategory} categoryNames={categoryNames} />
               {items
                 .filter((item) => item.categories?.includes(selectedCategory) || selectedCategory === "")
                 .filter((item) => item.name.toLowerCase().includes(itemQuery.toLowerCase()) || itemQuery === "")
@@ -266,6 +270,14 @@ export default function Home() {
         page === Page.Order &&
         (<div>
           order page
+        </div>)
+      }
+      {
+        page === Page.Price &&
+        (<div>
+          Price change page
+          <CategoryDropdown setSelectedCategory={setSelectedCategory} categoryNames={categoryNames} />
+
         </div>)
       }
     </div>
