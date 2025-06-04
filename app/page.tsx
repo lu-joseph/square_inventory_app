@@ -1,16 +1,19 @@
 "use client";
 import React, { useEffect, useState } from 'react';
 import crypto from 'crypto';
-import process from 'process';
+import CatalogObjectCard from './CatalogObjectCard';
+import VariationInfo from './VariationInfo';
+import GetInventory from './GetInventory';
+// import process from 'process';
 
-type Variation = {
+export type Variation = {
   name: string;
   sku: string;
   variationId: string;
   stock: number;
 };
 
-type InventoryItem = {
+export type InventoryItem = {
   itemId: string;
   name: string;
   variations?: Variation[];
@@ -92,24 +95,8 @@ export default function Home() {
   }, [isAuthenticated]);
 
   useEffect(() => {
-    if (isAuthenticated && currentLocation !== "") {
-      const getItems = async () => {
-        try {
-          const res = await fetch(`/api/catalog/list?token=${localStorage.getItem('square_access_token')}&location=${currentLocation}`, {
-            method: 'GET',
-            headers: { 'Content-Type': 'application/json' },
-          });
-          const response = await res.json();
-          console.log(response);
-          if (res.status !== 500)
-            setItems(response.items);
-
-        } catch (err) {
-          console.log(err);
-          setError('Failed to get items');
-        }
-      };
-      getItems();
+    if (isAuthenticated && currentLocation) {
+      GetInventory({ currentLocation, setItems, setError });
     }
   }, [isAuthenticated, currentLocation])
 
@@ -143,7 +130,7 @@ export default function Home() {
 
     // Store for later
     localStorage.setItem('square_code_verifier', squareCodeVerifier);
-    const scopes = ["INVENTORY_READ", "ITEMS_READ", "MERCHANT_PROFILE_READ"];
+    const scopes = ["INVENTORY_READ", "INVENTORY_WRITE", "ITEMS_READ", "MERCHANT_PROFILE_READ"];
 
     return `${baseURl}/oauth2/authorize?client_id=${appId}&scope=${scopes.join("+")}&session=false&code_challenge=${squareCodeChallenge}`;
 
@@ -214,6 +201,10 @@ export default function Home() {
     );
   }
 
+  if (locations.length === 0) {
+    return (<div>Authenticated; Locations loading...</div>)
+  }
+
   return (
     <div style={{ padding: "1rem" }}>
       <div className="btn-group" role="group" aria-label="Basic radio toggle button group">
@@ -236,39 +227,42 @@ export default function Home() {
         ))}
       </select>
       {
-        page === Page.Inventory &&
-        (<div>
-          <h2>Inventory</h2>
-          <input type="text" className='form-control' placeholder="Enter item name..." onChange={(e) => setItemQuery(e.target.value)}></input>
-          <select className="form-select" aria-label="Select reporting category" onChange={(e) => setSelectedCategory(e.target.value)}>
-            <option value="">Filter by reporting category</option>
-            {categoryNames.map((category) => (
-              <option key={category.id} value={category.name}>{category.name}</option>
-            ))}
-          </select>
+        (page === Page.Inventory && currentLocation) &&
+        (
+          items.length > 0
+            ? <div>
+              <h2>Inventory</h2>
+              <input type="text" className='form-control' placeholder="Enter item name..." onChange={(e) => setItemQuery(e.target.value)}></input>
+              <select className="form-select" aria-label="Select reporting category" onChange={(e) => setSelectedCategory(e.target.value)}>
+                <option value="">Filter by reporting category</option>
+                {categoryNames?.map((category) => (
+                  <option key={category.id} value={category.name}>{category.name}</option>
+                ))}
+              </select>
 
-          {items
-            .filter((item) => item.categories?.includes(selectedCategory) || selectedCategory === "")
-            .filter((item) => item.name.toLowerCase().includes(itemQuery.toLowerCase()) || itemQuery === "")
-            .map((item) => (
-              <div key={item.itemId} style={{
-                border: "1px solid #ccc",
-                marginBottom: "1rem",
-                padding: "0.5rem",
-                borderRadius: "6px",
-              }}>
-                <h3 >
-                  {item.name}
-                </h3>
-                <p>Categories: {item.categories?.join(", ")}</p>
-                {item.variations?.map((variation) => (
-                  <div key={variation.variationId} style={{ marginBottom: "0.5rem" }}>
-                    <strong>{variation.name || 'Regular'} (sku: {variation.sku || '-'})</strong>: {variation.stock || 0}
+              {items
+                .filter((item) => item.categories?.includes(selectedCategory) || selectedCategory === "")
+                .filter((item) => item.name.toLowerCase().includes(itemQuery.toLowerCase()) || itemQuery === "")
+                .map((item) => (
+                  <div key={item.itemId} style={{
+                    border: "1px solid #ccc",
+                    marginBottom: "1rem",
+                    padding: "0.5rem",
+                    borderRadius: "6px",
+                  }}>
+                    <h3 >
+                      {item.name}
+                    </h3>
+                    <p>Categories: {item.categories?.join(", ")}</p>
+                    {item.variations?.map((variation) => (
+                      <div key={variation.variationId}>
+                        <VariationInfo variation={variation} locationId={currentLocation} setItems={setItems} setError={setError} />
+                      </div>
+                    ))}
                   </div>
                 ))}
-              </div>
-            ))}
-        </div>)
+            </div>
+            : <div>Loading inventory...</div>)
       }
       {
         page === Page.Order &&
