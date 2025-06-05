@@ -241,7 +241,7 @@ export default function Home() {
           <option key={location.id} value={location.id}>{location.name}</option>
         ))}
       </select>
-      <button type="button" className="btn btn-primary mt-1" onClick={() => { setItems([]); GetInventory({ currentLocation, setItems, setError }) }}>Refresh list</button>
+      {/* <button type="button" className="btn btn-primary mt-1" onClick={() => { setItems([]); GetInventory({ currentLocation, setItems, setError }) }}>Refresh list</button> */}
       {
         (page === Page.Inventory && currentLocation) &&
         <div>

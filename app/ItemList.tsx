@@ -1,3 +1,4 @@
+import { useState } from "react";
 import { InventoryItem } from "./page";
 import VariationInfo from "./VariationInfo";
 
@@ -10,6 +11,7 @@ export default function ItemList(props: {
     setError: (value: React.SetStateAction<string>) => void,
     setItemQuery: (value: React.SetStateAction<string>) => void,
 }) {
+
     return (<>
         {props.items.length > 0
             ? props.items
