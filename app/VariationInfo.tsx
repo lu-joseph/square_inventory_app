@@ -10,10 +10,11 @@ export default function VariationInfo(props: {
     setItemQuery: (value: React.SetStateAction<string>) => void,
 }) {
 
-    const inputRef = useRef<HTMLInputElement>(null);
+    const quantityInputRef = useRef<HTMLInputElement>(null);
+    const priceInputRef = useRef<HTMLInputElement>(null);
 
-    const handleClick = async () => {
-        if (inputRef.current?.value && !isNaN(parseInt(inputRef.current.value))) {
+    const handleInventoryUpdateClick = async () => {
+        if (quantityInputRef.current?.value && !isNaN(parseInt(quantityInputRef.current.value))) {
             try {
                 fetch(`/api/inventory/batch_change?token=${localStorage.getItem('square_access_token')}`, {
                     method: 'POST',
@@ -22,7 +23,7 @@ export default function VariationInfo(props: {
                         changes: [
                             {
                                 catalogObjectId: props.variation.variationId,
-                                quantity: inputRef.current.value,
+                                quantity: quantityInputRef.current.value,
                                 locationId: props.locationId,
                             }
                         ]
@@ -38,7 +39,7 @@ export default function VariationInfo(props: {
             } catch (err) {
                 console.log(err);
             }
-            inputRef.current.value = "";
+            quantityInputRef.current.value = "";
             props.setItems([]);
             props.setItemQuery("");
 
@@ -46,16 +47,41 @@ export default function VariationInfo(props: {
         }
     }
 
+    const handlePriceUpdateclick = async () => {
+
+    }
+
 
     return (<>
         <div style={{ marginBottom: "0.5rem" }}>
-            <strong>{props.variation.name || 'Regular'} (sku: {props.variation.sku || '-'})</strong>: {props.variation.stock || 0}
-        </div>
-        <div className="input-group mb-3">
-            <input ref={inputRef} type="text" className="form-control" placeholder="New quantity" />
-            <div className="input-group-append">
-                <button className="btn btn-outline-secondary" onClick={() => { handleClick() }} >Update</button>
+            <div>
+                <strong>{props.variation.name || 'Regular'}:</strong>
+                {props.variation.sku ? " SKU " + props.variation.sku : ''}
             </div>
+            <div className="input-group mb-3 d-flex flex-row justify-content-start">
+                <div className="d-flex flex-column justify-content-center mx-3">
+                    Quantity: {props.variation.stock || 0}
+                </div>
+                <div style={{ width: "10%" }}>
+                    <input ref={quantityInputRef} type="text" className="form-control" placeholder="" />
+                </div>
+                <div className="input-group-append">
+                    <button className="btn btn-outline-secondary" onClick={() => { handleInventoryUpdateClick() }} >Update</button>
+                </div>
+            </div>
+            {!!props.variation.price &&
+                <div className="input-group mb-3 d-flex flex-row justify-content-start">
+                    <div className="d-flex flex-column justify-content-center mx-3">
+                        Price: ${(parseFloat(props.variation.price) / 100.0).toFixed(2)}
+                    </div>
+                    <div style={{ width: "10%" }}>
+                        <input ref={priceInputRef} type="text" className="form-control" placeholder="" />
+                    </div>
+                    <div className="input-group-append">
+                        <button className="btn btn-outline-secondary" onClick={() => { handlePriceUpdateclick() }} >Update</button>
+                    </div>
+                </div>}
         </div>
+
     </>)
 }

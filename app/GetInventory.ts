@@ -16,10 +16,11 @@ export default async function GetInventory({
             headers: { 'Content-Type': 'application/json' },
         });
         const response = await res.json();
-        console.log(response);
-        if (res.status !== 500)
-            setItems(response.items);
-
+        if (res.status === 500 || !response) {
+            setError("Error")
+        } else {
+            setItems(response);
+        }
     } catch (err) {
         console.log(err);
         setError('Failed to get items');

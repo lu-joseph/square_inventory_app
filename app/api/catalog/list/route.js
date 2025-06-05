@@ -1,6 +1,7 @@
 import { NextResponse } from 'next/server';
 import { SquareClient } from 'square';
 import process from 'process';
+import { filterBigInt } from "../../../utils"
 
 
 export async function GET(request) {
@@ -47,13 +48,14 @@ export async function GET(request) {
                         name: variation.itemVariationData.name,
                         sku: variation.itemVariationData.sku,
                         variationId: variation.id,
-                        stock: (inventoryMap.get(variation.id) || 0)
+                        stock: (inventoryMap.get(variation.id) || 0),
+                        price: variation.itemVariationData.priceMoney?.amount,
                     }
                 )),
                 categories: item.itemData.categories?.map((category) => (categories.get(category.id)))
             }
         ))
-        return NextResponse.json({ items });
+        return NextResponse.json(filterBigInt(items).JSONObject);
 
     } catch (err) {
         console.error(err);
