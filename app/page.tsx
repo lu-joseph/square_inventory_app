@@ -59,7 +59,7 @@ const getAuthUrlValues = () => {
     squareCodeChallenge: codeChallenge,
     squareCodeVerifier,
     baseURl: process.env.NEXT_PUBLIC_SQUARE_BASE_URL,
-    appId: process.env.NEXT_PUBLIC_APP_ID,
+    appId: process.env.APP_ID,
   }
 }
 
