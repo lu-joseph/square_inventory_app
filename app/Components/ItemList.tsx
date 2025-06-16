@@ -1,5 +1,4 @@
-import { useState } from "react";
-import { InventoryItem } from "./page";
+import { InventoryItem } from "../types";
 import VariationInfo from "./VariationInfo";
 
 export default function ItemList(props: {

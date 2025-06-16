@@ -1,4 +1,4 @@
-import { type Category } from "./page";
+import { type Category } from "../types";
 
 export default function CategoryDropdown(props:
     {

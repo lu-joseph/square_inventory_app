@@ -1,31 +1,10 @@
 "use client";
 import React, { useEffect, useState } from 'react';
-import crypto from 'crypto';
-import VariationInfo from './VariationInfo';
-import GetInventory from './GetInventory';
-import CategoryDropdown from './CategoryDropdown';
-import BulkPricePage from './BulkPricePage';
-import ItemList from './ItemList';
-
-export type Variation = {
-  name: string;
-  sku: string;
-  variationId: string;
-  stock: string;
-  price: string;
-};
-
-export type InventoryItem = {
-  itemId: string;
-  name: string;
-  variations?: Variation[];
-  categories?: string[];
-};
-
-export type Category = {
-  id: string;
-  name: string;
-}
+import { generateAuthUrl, getCategoryNames, getLocations, getInventory } from './utils';
+import CategoryDropdown from './Components/CategoryDropdown';
+import BulkPricePage from './Components/BulkPricePage';
+import ItemList from './Components/ItemList';
+import { Category, InventoryItem, Location } from './types';
 
 enum Page {
   Inventory = 0,
@@ -33,35 +12,6 @@ enum Page {
   Price,
 }
 
-type Location = {
-  id: string;
-  name: string;
-}
-
-const getAuthUrlValues = () => {
-  const base64Encode = (str: Buffer) => {
-    return str.toString('base64')
-      .replace(/\+/g, '-')
-      .replace(/\//g, '_')
-      .replace(/=/g, '')
-  }
-
-  const codeVerifier = base64Encode(crypto.randomBytes(32))
-
-  const sha256 = (buffer: string) => {
-    return crypto.createHash('sha256').update(buffer).digest()
-  }
-  const codeChallenge = base64Encode(sha256(codeVerifier))
-
-  // Set the code verifier and state in local storage so we can check it later
-  const squareCodeVerifier = codeVerifier
-  return {
-    squareCodeChallenge: codeChallenge,
-    squareCodeVerifier,
-    baseURl: process.env.NEXT_PUBLIC_SQUARE_BASE_URL,
-    appId: process.env.NEXT_PUBLIC_APP_ID,
-  }
-}
 
 export default function Home() {
   const [items, setItems] = useState<InventoryItem[]>([]);
@@ -78,64 +28,22 @@ export default function Home() {
 
   useEffect(() => {
     if (isAuthenticated) {
-      const getLocations = async () => {
-        try {
-          const res = await fetch(`/api/get_locations?token=${localStorage.getItem('square_access_token')}`, {
-            method: 'GET',
-            headers: { 'Content-Type': 'application/json' },
-          });
-          const response = await res.json();
-          if (res.status !== 500)
-            setLocations(response);
-        } catch (err) {
-          console.log(err);
-          setError('Failed to get locations');
-        }
-      }
-      getLocations();
+      getLocations({ setLocations, setError });
     }
   }, [isAuthenticated]);
 
   useEffect(() => {
     if (isAuthenticated && currentLocation) {
-      GetInventory({ currentLocation, setItems, setError });
+      getInventory({ currentLocation, setItems, setError });
     }
   }, [isAuthenticated, currentLocation])
 
   useEffect(() => {
     if (isAuthenticated && (page === Page.Inventory || page === Page.Price)) {
-      const getCategoryNames = async () => {
-        try {
-          const res = await fetch(`/api/category_names?token=${localStorage.getItem('square_access_token')}`, {
-            method: 'GET',
-            headers: { 'Content-Type': 'application/json' },
-          });
-          const response = await res.json();
-          setCategoryNames(response);
-        } catch (err) {
-          console.log(err);
-          setError('Failed to get category names');
-        }
-      };
-      getCategoryNames();
-
+      getCategoryNames({ setCategoryNames, setError });
     }
   }, [isAuthenticated, page])
 
-  const generateAuthUrl = () => {
-    const {
-      squareCodeChallenge,
-      squareCodeVerifier,
-      baseURl,
-      appId,
-    } = getAuthUrlValues();
-
-    localStorage.setItem('square_code_verifier', squareCodeVerifier);
-    const scopes = ["INVENTORY_READ", "INVENTORY_WRITE", "ITEMS_READ", "ITEMS_WRITE", "MERCHANT_PROFILE_READ"];
-
-    return `${baseURl}/oauth2/authorize?client_id=${appId}&scope=${scopes.join("+")}&session=false&code_challenge=${squareCodeChallenge}`;
-
-  }
 
   useEffect(() => {
     const urlParams = new URLSearchParams(window.location.search);

@@ -1,8 +1,7 @@
 import { useEffect, useRef, useState } from "react"
-import { Category, InventoryItem } from "./page"
+import { Category, InventoryItem } from "../types"
 import ItemList from "./ItemList";
-import GetInventory from "./GetInventory";
-import { fetchHelper } from "./utils";
+import { fetchHelper, getInventory } from "../utils";
 import CategoryDropdown from "./CategoryDropdown";
 import LoadingSpinner from "./LoadingSpinner";
 
@@ -44,7 +43,7 @@ export default function BulkPricePage(props: {
 
     const handleClickRefresh = async () => {
         props.setItems([]);
-        GetInventory({ currentLocation: props.currentLocation, setItems: props.setItems, setError: props.setError });
+        getInventory({ currentLocation: props.currentLocation, setItems: props.setItems, setError: props.setError });
         setOutdatedList(false);
     }
     return (<>

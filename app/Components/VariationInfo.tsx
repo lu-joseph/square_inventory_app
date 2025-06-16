@@ -1,6 +1,6 @@
 import { useRef } from 'react';
-import { InventoryItem, type Variation } from './page';
-import GetInventory from './GetInventory';
+import { type InventoryItem, type Variation } from '../types';
+import { getInventory } from '../utils';
 
 export default function VariationInfo(props: {
     variation: Variation,
@@ -43,7 +43,7 @@ export default function VariationInfo(props: {
             props.setItems([]);
             props.setItemQuery("");
 
-            GetInventory({ currentLocation: props.locationId, setItems: props.setItems, setError: props.setError })
+            getInventory({ currentLocation: props.locationId, setItems: props.setItems, setError: props.setError })
         }
     }
 
