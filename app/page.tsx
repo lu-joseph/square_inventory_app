@@ -265,17 +265,19 @@ export default function Home() {
         </div>)
       }
       {
-        page === Page.Price &&
-        (<div>
-          <CategoryDropdown setSelectedCategory={setSelectedCategory} categoryNames={categoryNames} />
+        page === Page.Price && currentLocation &&
+        (<div className='mt-2'>
           <BulkPricePage
             selectedCategory={selectedCategory}
             itemQuery={itemQuery}
             items={items}
-            setItems={setItems}
+            categoryNames={categoryNames}
             currentLocation={currentLocation}
+            setItems={setItems}
             setError={setError}
-            setItemQuery={setItemQuery} />
+            setItemQuery={setItemQuery}
+            setSelectedCategory={setSelectedCategory}
+          />
         </div>)
       }
     </div>

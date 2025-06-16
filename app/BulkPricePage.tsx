@@ -1,17 +1,21 @@
 import { useEffect, useRef, useState } from "react"
-import { InventoryItem } from "./page"
+import { Category, InventoryItem } from "./page"
 import ItemList from "./ItemList";
 import GetInventory from "./GetInventory";
 import { fetchHelper } from "./utils";
+import CategoryDropdown from "./CategoryDropdown";
+import LoadingSpinner from "./LoadingSpinner";
 
 export default function BulkPricePage(props: {
     selectedCategory: string,
     itemQuery: string,
     currentLocation: string,
     items: InventoryItem[],
+    categoryNames: Category[],
     setItems: (value: React.SetStateAction<InventoryItem[]>) => void,
     setError: (value: React.SetStateAction<string>) => void,
     setItemQuery: (value: React.SetStateAction<string>) => void,
+    setSelectedCategory: (value: React.SetStateAction<string>) => void,
 }) {
     const inputRef = useRef<HTMLInputElement>(null);
     const [outdatedList, setOutdatedList] = useState(false);
@@ -44,10 +48,12 @@ export default function BulkPricePage(props: {
         setOutdatedList(false);
     }
     return (<>
+        <CategoryDropdown setSelectedCategory={props.setSelectedCategory} categoryNames={props.categoryNames} />
         {outdatedList && <div>List outdated; refresh to see updates</div>}
         <button type="button" className="btn btn-primary mt-1" onClick={() => handleClickRefresh()}>Refresh list</button>
 
-        <div className="input-group mb-3 d-flex flex-row justify-content-start">
+        <div className="input-group my-3 d-flex flex-row justify-content-start">
+            <div className="d-flex flex-column justify-content-center mx-3">New price: </div>
             <div style={{ width: "10%" }}>
                 <input ref={inputRef} type="text" className="form-control" placeholder="" />
             </div>
@@ -56,9 +62,7 @@ export default function BulkPricePage(props: {
             </div>
             {
                 loading &&
-                <div className="intput-group-append px-2">
-                    <span className="loader"></span>
-                </div>
+                <LoadingSpinner />
             }
         </div>
         {
