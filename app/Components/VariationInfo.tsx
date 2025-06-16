@@ -16,7 +16,7 @@ export default function VariationInfo(props: {
     const handleInventoryUpdateClick = async () => {
         if (quantityInputRef.current?.value && !isNaN(parseInt(quantityInputRef.current.value))) {
             try {
-                fetch(`/api/inventory/batch_change?token=${localStorage.getItem('square_access_token')}`, {
+                fetch(`/api/square/inventory/batch_change?token=${localStorage.getItem('square_access_token')}`, {
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json' },
                     body: JSON.stringify({

@@ -33,7 +33,6 @@
     "**/*.ts",
     "**/*.tsx",
     ".next/types/**/*.ts",
-    "app/api/catalog/list.js"
   ],
   "exclude": [
     "node_modules"

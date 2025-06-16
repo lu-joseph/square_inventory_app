@@ -58,7 +58,7 @@ export default function Home() {
       }
 
       // Exchange code for token (via your own API)
-      fetch('/api/square_token_exchange', {
+      fetch('/api/square/token_exchange', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ code, verifier }),

@@ -29,7 +29,7 @@ export default function BulkPricePage(props: {
         const selectedItems = props.items.filter((item) => item.categories?.includes(props.selectedCategory))
         setLoading(true);
         try {
-            const res = await fetchHelper('/api/catalog/bulk_change_price', 'POST', JSON.stringify({
+            const res = await fetchHelper('/api/square/catalog/bulk_change_price', 'POST', JSON.stringify({
                 changes: selectedItems.map((item) => ({
                     objectId: item.itemId,
                     newPrice: priceInCents.toString()

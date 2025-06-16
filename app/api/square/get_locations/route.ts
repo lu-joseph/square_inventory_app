@@ -2,9 +2,7 @@ import { NextResponse } from 'next/server';
 import { SquareClient } from 'square';
 import process from 'process';
 
-
-
-export async function GET(request) {
+export async function GET(request: Request) {
     try {
         const urlParams = new URLSearchParams(new URL(request.url).search);
         const token = urlParams.get('token');
@@ -16,7 +14,7 @@ export async function GET(request) {
             token: token,
         });
         const response = await client.locations.list();
-        return NextResponse.json(response.locations.map((location) => ({ id: location.id, name: location.name })))
+        return NextResponse.json(response.locations?.map((location) => ({ id: location.id, name: location.name })))
 
     } catch (err) {
         console.error(err);

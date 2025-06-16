@@ -26,7 +26,7 @@ export async function getInventory({
 
 }) {
     try {
-        const res = await fetch(`/api/catalog/list?token=${localStorage.getItem('square_access_token')}&location=${currentLocation}`, {
+        const res = await fetch(`/api/square/catalog/list?token=${localStorage.getItem('square_access_token')}&location=${currentLocation}`, {
             method: 'GET',
             headers: { 'Content-Type': 'application/json' },
         });
@@ -50,7 +50,7 @@ export async function getLocations({
     setError: (value: React.SetStateAction<string>) => void
 }) {
     try {
-        const res = await fetch(`/api/get_locations?token=${localStorage.getItem('square_access_token')}`, {
+        const res = await fetch(`/api/square/get_locations?token=${localStorage.getItem('square_access_token')}`, {
             method: 'GET',
             headers: { 'Content-Type': 'application/json' },
         });
@@ -71,7 +71,7 @@ export async function getCategoryNames({
     setError: (value: React.SetStateAction<string>) => void
 }) {
     try {
-        const res = await fetch(`/api/category_names?token=${localStorage.getItem('square_access_token')}`, {
+        const res = await fetch(`/api/square/category_names?token=${localStorage.getItem('square_access_token')}`, {
             method: 'GET',
             headers: { 'Content-Type': 'application/json' },
         });

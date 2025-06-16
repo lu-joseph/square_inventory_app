@@ -2,21 +2,20 @@ import { NextResponse } from 'next/server';
 import { SquareClient } from 'square';
 import process from 'process';
 
+type InventoryChange = {
+    catalogObjectId: string,
+    quantity: string,
+    locationId: string,
+}
+
 /*
 body:
-
 {
-    changes: [
-        {
-            catalogObjectId: _,
-            quantity: _,
-            locationId: _,
-        }
-    ]
+    changes: InventoryChange[]
 }
 */
 
-export async function POST(request) {
+export async function POST(request: Request) {
     try {
         const body = await request.json();
         const urlParams = new URLSearchParams(new URL(request.url).search);
@@ -34,7 +33,7 @@ export async function POST(request) {
 
         const response = await client.inventory.batchCreateChanges({
             idempotencyKey,
-            changes: changes.map((change) => ({
+            changes: changes.map((change: InventoryChange) => ({
                 type: "PHYSICAL_COUNT",
                 physicalCount: {
                     catalogObjectId: change.catalogObjectId,

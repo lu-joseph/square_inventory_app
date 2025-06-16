@@ -1,10 +1,9 @@
 import { NextResponse } from 'next/server';
-import { SquareClient } from 'square';
-import process from 'process';
-import { filterBigInt } from "../../../utils"
+import { Square, SquareClient } from 'square';
+import { filterBigInt } from '../../../../utils';
 
 
-export async function GET(request) {
+export async function GET(request: Request) {
     try {
         const urlParams = new URLSearchParams(new URL(request.url).search);
         const token = urlParams.get('token');
@@ -22,37 +21,33 @@ export async function GET(request) {
         const categoryResponse = await client.catalog.list({
             types: 'CATEGORY',
         });
-        console.log("category response:", categoryResponse.data);
 
-        const categories = new Map(categoryResponse.response.objects?.map((category) => ([category.id, category.categoryData.name])))
-
+        const categories = new Map(categoryResponse.data?.map((category: Square.CatalogObjectCategory) => ([category.id, category.categoryData?.name])))
         const inventoryResponse = await client.inventory.batchGetCounts({
             locationIds: [
                 location,
             ]
         })
 
-        console.log('inventory response:', inventoryResponse.data)
+        const inventoryMap = new Map(inventoryResponse.data?.map((count) => ([count.catalogObjectId, count.quantity])));
 
-        const inventoryMap = new Map(inventoryResponse.response.counts?.map((count) => ([count.catalogObjectId, count.quantity])));
-
-        const { response } = await client.catalog.list({
+        const catalogItemsResponse = await client.catalog.list({
             types: 'ITEM',
         });
-        const items = response.objects?.map((item) => (
+        const items = (catalogItemsResponse.data as Square.CatalogObjectItem[])?.map((item) => (
             {
                 itemId: item.id,
-                name: item.itemData.name,
-                variations: item.itemData.variations.map((variation) => (
+                name: item.itemData?.name,
+                variations: (item.itemData?.variations as Square.CatalogObjectItemVariation[])?.map((variation) => (
                     {
-                        name: variation.itemVariationData.name,
-                        sku: variation.itemVariationData.sku,
+                        name: variation.itemVariationData?.name,
+                        sku: variation.itemVariationData?.sku,
                         variationId: variation.id,
                         stock: (inventoryMap.get(variation.id) || 0),
-                        price: variation.itemVariationData.priceMoney?.amount,
+                        price: variation.itemVariationData?.priceMoney?.amount,
                     }
                 )),
-                categories: item.itemData.categories?.map((category) => (categories.get(category.id)))
+                categories: item.itemData?.categories?.map((category) => (categories.get(category.id)))
             }
         ))
         return NextResponse.json(filterBigInt(items).JSONObject);

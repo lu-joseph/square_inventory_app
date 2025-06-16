@@ -1,6 +1,6 @@
 
 import { NextResponse } from 'next/server';
-import { getMongoDBConnection } from '../../mongodb/utils';
+import { getMongoDBConnection } from '../utils';
 import { getMerchantId, getSquareClient } from '../../square/utils';
 
 export async function GET(request: Request) {

@@ -1,10 +1,10 @@
 import { NextResponse } from 'next/server';
-import { SquareClient } from 'square';
+import { Square, SquareClient } from 'square';
 import process from 'process';
 
 
 
-export async function GET(request) {
+export async function GET(request: Request) {
     try {
         const urlParams = new URLSearchParams(new URL(request.url).search);
         const token = urlParams.get('token');
@@ -18,7 +18,7 @@ export async function GET(request) {
         const { data } = await client.catalog.list({
             types: 'CATEGORY',
         });
-        return NextResponse.json(data.map((item) => ({ id: item.id, name: item.categoryData.name })))
+        return NextResponse.json(data.map((item: Square.CatalogObjectCategory) => ({ id: item.id, name: item.categoryData?.name })))
 
     } catch (err) {
         console.error(err);
