@@ -1,3 +1,4 @@
+
 export function filterBigInt(JSONObject: any) {
     return JSON.parse(JSON.stringify({ JSONObject }, (key, value) => { return typeof value === 'bigint' ? value.toString() : value }))
 }
