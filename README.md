@@ -5,6 +5,7 @@ Enabling Square admins to quickly manage inventory and catalog on the go. Also e
 To run in local:
 
 ```bash
+npm install
 vercel env pull .env.local
 vercel dev
 ```
