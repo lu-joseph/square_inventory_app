@@ -12,7 +12,7 @@ export async function POST(request: Request) {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify({
-                client_id: process.env.APP_ID,
+                client_id: process.env.NEXT_PUBLIC_APP_ID,
                 grant_type: 'authorization_code',
                 code,
                 code_verifier: verifier,
