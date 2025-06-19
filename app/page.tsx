@@ -5,8 +5,9 @@ import CategoryDropdown from './Components/CategoryDropdown';
 import BulkPricePage from './Components/BulkPricePage';
 import ItemList from './Components/ItemList';
 import { Category, InventoryItem, Location } from './types';
+import PageSelect from './Components/PageSelect';
 
-enum Page {
+export enum Page {
   Inventory = 0,
   Order,
   Price,
@@ -118,38 +119,16 @@ export default function Home() {
     return (<div>Error: {error}</div>)
   }
 
-  const switchPage = (newPage: Page) => {
-    setPage(newPage);
-    setSelectedCategory("");
-  }
 
   return (
     <div style={{ padding: "1rem" }}>
-      <div className="btn-group" role="group" aria-label="Basic radio toggle button group">
-        <input type="radio" className="btn-check" name="btnradio" id="btnradio1" value="Inventory"
-          checked={page === Page.Inventory}
-          onChange={() => switchPage(Page.Inventory)}
-        ></input>
-        <label className="btn btn-outline-primary" htmlFor="btnradio1">Inventory</label>
+      <PageSelect
+        page={page}
+        setPage={setPage}
+        setSelectedCategory={setSelectedCategory}
+        setCurrentLocation={setCurrentLocation}
+        locations={locations} />
 
-        <input type="radio" className="btn-check" name="btnradio" id="btnradio2" value="Order"
-          checked={page === Page.Order}
-          onChange={() => { switchPage(Page.Order) }}
-        ></input>
-        <label className="btn btn-outline-primary" htmlFor="btnradio2">Cash order</label>
-        <input type="radio" className="btn-check" name="btnradio" id="btnradio3" value="Price"
-          checked={page === Page.Price}
-          onChange={() => { switchPage(Page.Price) }}
-        ></input>
-        <label className="btn btn-outline-primary" htmlFor="btnradio3">Change category price</label>
-      </div>
-      <select className="form-select mt-2" aria-label="Select location" onChange={(e) => setCurrentLocation(e.target.value)}>
-        <option value="">Select location</option>
-        {locations.map((location) => (
-          <option key={location.id} value={location.id}>{location.name}</option>
-        ))}
-      </select>
-      {/* <button type="button" className="btn btn-primary mt-1" onClick={() => { setItems([]); GetInventory({ currentLocation, setItems, setError }) }}>Refresh list</button> */}
       {
         (page === Page.Inventory && currentLocation) &&
         <div>
