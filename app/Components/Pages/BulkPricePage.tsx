@@ -1,9 +1,9 @@
-import { useEffect, useRef, useState } from "react"
-import { Category, InventoryItem } from "../types"
-import ItemList from "./ItemList";
-import { fetchHelper, getInventory } from "../utils";
-import CategoryDropdown from "./CategoryDropdown";
-import LoadingSpinner from "./LoadingSpinner";
+import { useRef, useState } from "react"
+import { Category, InventoryItem } from "../../types"
+import ItemList from "../ItemList";
+import { fetchHelper, getInventory } from "../../utils";
+import CategoryDropdown from "../CategoryDropdown";
+import LoadingSpinner from "../LoadingSpinner";
 
 export default function BulkPricePage(props: {
     selectedCategory: string,

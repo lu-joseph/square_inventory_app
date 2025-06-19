@@ -2,10 +2,12 @@
 import React, { useEffect, useState } from 'react';
 import { generateAuthUrl, getCategoryNames, getLocations, getInventory } from './utils';
 import CategoryDropdown from './Components/CategoryDropdown';
-import BulkPricePage from './Components/BulkPricePage';
+import BulkPricePage from './Components/Pages/BulkPricePage';
 import ItemList from './Components/ItemList';
 import { Category, InventoryItem, Location } from './types';
 import PageSelect from './Components/PageSelect';
+import InventoryPage from './Components/Pages/InventoryPage';
+import OrderPage from './Components/Pages/OrderPage';
 
 export enum Page {
   Inventory = 0,
@@ -131,25 +133,21 @@ export default function Home() {
 
       {
         (page === Page.Inventory && currentLocation) &&
-        <div>
-          <h2>Inventory</h2>
-          <input type="text" className='form-control' placeholder="Enter item name..." value={itemQuery} onChange={(e) => setItemQuery(e.target.value)}></input>
-          <CategoryDropdown setSelectedCategory={setSelectedCategory} categoryNames={categoryNames} />
-          <ItemList
-            items={items}
-            selectedCategory={selectedCategory}
-            itemQuery={itemQuery}
-            currentLocation={currentLocation}
-            setItems={setItems}
-            setError={setError}
-            setItemQuery={setItemQuery} />
-        </div>
+        <InventoryPage
+          itemQuery={itemQuery}
+          setItemQuery={setItemQuery}
+          selectedCategory={selectedCategory}
+          setSelectedCategory={setSelectedCategory}
+          items={items}
+          setItems={setItems}
+          categoryNames={categoryNames}
+          currentLocation={currentLocation}
+          setError={setError}
+        />
       }
       {
         page === Page.Order &&
-        (<div>
-          order page
-        </div>)
+        <OrderPage />
       }
       {
         page === Page.Price && currentLocation &&
