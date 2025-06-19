@@ -1,19 +1,11 @@
 "use client";
 import React, { useEffect, useState } from 'react';
 import { generateAuthUrl, getCategoryNames, getLocations, getInventory } from './utils';
-import CategoryDropdown from './Components/CategoryDropdown';
 import BulkPricePage from './Components/Pages/BulkPricePage';
-import ItemList from './Components/ItemList';
-import { Category, InventoryItem, Location } from './types';
+import { Category, InventoryItem, Location, PageType } from './types';
 import PageSelect from './Components/PageSelect';
 import InventoryPage from './Components/Pages/InventoryPage';
 import OrderPage from './Components/Pages/OrderPage';
-
-export enum Page {
-  Inventory = 0,
-  Order,
-  Price,
-}
 
 
 export default function Home() {
@@ -23,7 +15,7 @@ export default function Home() {
   const [currentLocation, setCurrentLocation] = useState("");
   const [selectedCategory, setSelectedCategory] = useState("");
   const [itemQuery, setItemQuery] = useState("");
-  const [page, setPage] = useState<Page>(Page.Inventory);
+  const [page, setPage] = useState<PageType>(PageType.Inventory);
 
   const [isAuthenticated, setIsAuthenticated] = useState(false);
 
@@ -42,7 +34,7 @@ export default function Home() {
   }, [isAuthenticated, currentLocation])
 
   useEffect(() => {
-    if (isAuthenticated && (page === Page.Inventory || page === Page.Price)) {
+    if (isAuthenticated && (page === PageType.Inventory || page === PageType.Price)) {
       getCategoryNames({ setCategoryNames, setError });
     }
   }, [isAuthenticated, page])
@@ -132,7 +124,7 @@ export default function Home() {
         locations={locations} />
 
       {
-        (page === Page.Inventory && currentLocation) &&
+        (page === PageType.Inventory && currentLocation) &&
         <InventoryPage
           itemQuery={itemQuery}
           setItemQuery={setItemQuery}
@@ -146,11 +138,11 @@ export default function Home() {
         />
       }
       {
-        page === Page.Order &&
+        page === PageType.Order &&
         <OrderPage />
       }
       {
-        page === Page.Price && currentLocation &&
+        page === PageType.Price && currentLocation &&
         (<div className='mt-2'>
           <BulkPricePage
             selectedCategory={selectedCategory}

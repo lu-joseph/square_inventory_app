@@ -22,3 +22,9 @@ export type Location = {
     id: string;
     name: string;
 }
+
+export enum PageType {
+    Inventory = 0,
+    Order,
+    Price,
+}

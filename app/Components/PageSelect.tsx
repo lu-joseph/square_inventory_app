@@ -1,16 +1,15 @@
 import React from "react";
-import { Page } from "../page"
-import { Location } from "../types";
+import { PageType, Location } from "../types";
 
 export default function PageSelect(
     props: {
-        page: Page,
-        setPage: (newPage: Page) => void,
+        page: PageType,
+        setPage: (newPage: PageType) => void,
         setSelectedCategory: React.Dispatch<React.SetStateAction<string>>,
         setCurrentLocation: React.Dispatch<React.SetStateAction<string>>,
         locations: Location[]
     }) {
-    const switchPage = (newPage: Page) => {
+    const switchPage = (newPage: PageType) => {
         props.setPage(newPage);
         props.setSelectedCategory("");
     }
@@ -18,19 +17,19 @@ export default function PageSelect(
         <>
             <div className="btn-group" role="group" aria-label="Basic radio toggle button group">
                 <input type="radio" className="btn-check" name="btnradio" id="btnradio1" value="Inventory"
-                    checked={props.page === Page.Inventory}
-                    onChange={() => switchPage(Page.Inventory)}
+                    checked={props.page === PageType.Inventory}
+                    onChange={() => switchPage(PageType.Inventory)}
                 ></input>
                 <label className="btn btn-outline-primary" htmlFor="btnradio1">Inventory</label>
 
                 <input type="radio" className="btn-check" name="btnradio" id="btnradio2" value="Order"
-                    checked={props.page === Page.Order}
-                    onChange={() => { switchPage(Page.Order) }}
+                    checked={props.page === PageType.Order}
+                    onChange={() => { switchPage(PageType.Order) }}
                 ></input>
                 <label className="btn btn-outline-primary" htmlFor="btnradio2">Cash order</label>
                 <input type="radio" className="btn-check" name="btnradio" id="btnradio3" value="Price"
-                    checked={props.page === Page.Price}
-                    onChange={() => { switchPage(Page.Price) }}
+                    checked={props.page === PageType.Price}
+                    onChange={() => { switchPage(PageType.Price) }}
                 ></input>
                 <label className="btn btn-outline-primary" htmlFor="btnradio3">Change category price</label>
             </div>
