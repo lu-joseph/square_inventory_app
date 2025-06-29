@@ -6,6 +6,7 @@ import { Category, InventoryItem, Location, PageType } from './types';
 import PageSelect from './Components/PageSelect';
 import InventoryPage from './Components/Pages/InventoryPage';
 import OrderPage from './Components/Pages/OrderPage';
+import CheckoutPage from './Components/Pages/CheckoutPage';
 
 
 export default function Home() {
@@ -156,6 +157,10 @@ export default function Home() {
             setSelectedCategory={setSelectedCategory}
           />
         </div>)
+      }
+      {
+        (page === PageType.CheckoutPage && currentLocation)&&
+        <CheckoutPage />
       }
     </div>
   );

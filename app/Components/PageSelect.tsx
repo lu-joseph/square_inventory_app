@@ -27,11 +27,18 @@ export default function PageSelect(
                     onChange={() => { switchPage(PageType.Order) }}
                 ></input>
                 <label className="btn btn-outline-primary" htmlFor="btnradio2">Cash order</label>
+
                 <input type="radio" className="btn-check" name="btnradio" id="btnradio3" value="Price"
                     checked={props.page === PageType.Price}
                     onChange={() => { switchPage(PageType.Price) }}
                 ></input>
                 <label className="btn btn-outline-primary" htmlFor="btnradio3">Change category price</label>
+
+                <input type="radio" className="btn-check" name="btnradio" id="btnradio4" value="Checkout"
+                    checked={props.page === PageType.CheckoutPage}
+                    onChange={() => { switchPage(PageType.CheckoutPage) }}
+                ></input>
+                <label className="btn btn-outline-primary" htmlFor="btnradio4">Checkout</label>
             </div>
             <select className="form-select mt-2" aria-label="Select location" onChange={(e) => props.setCurrentLocation(e.target.value)}>
                 <option value="">Select location</option>

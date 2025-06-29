@@ -27,4 +27,5 @@ export enum PageType {
     Inventory = 0,
     Order,
     Price,
+    CheckoutPage
 }
