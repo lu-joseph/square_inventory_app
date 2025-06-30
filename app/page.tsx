@@ -160,7 +160,14 @@ export default function Home() {
       }
       {
         (page === PageType.CheckoutPage && currentLocation)&&
-        <CheckoutPage />
+        <CheckoutPage
+          itemQuery={itemQuery}
+          setItemQuery={setItemQuery}
+          items={items}
+          setItems={setItems}
+          currentLocation={currentLocation}
+          setError={setError}
+        />
       }
     </div>
   );
